@@ -1,25 +1,34 @@
-import { NextResponse } from "next/server";
+// app/api/analytics/route.ts
+
+import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
-    const res = await fetch("https://api.vapi.dev/analytics", {
-      method: "GET",
+    const res = await fetch("https://api.vapi.ai/analytics", {
+      method: "POST",
       headers: {
         Authorization: `Bearer ${process.env.VAPI_API_KEY}`,
+        "Content-Type": "application/json",
       },
+      body: JSON.stringify({
+        queries: [
+          {
+            table: "call",
+            name: "Call Summary",
+            operations: [
+              {
+                operation: "sum",
+                column: "duration"
+              }
+            ]
+          }
+        ]
+      }),
     });
 
-    const text = await res.text();
-    console.log("Vapi response:", text);
-
-    if (!res.ok) {
-      return NextResponse.json({ error: "Failed to fetch analytics", details: text }, { status: 500 });
-    }
-
-    const data = JSON.parse(text);
+    const data = await res.json();
     return NextResponse.json(data);
-  } catch (error) {
-    console.error("Error fetching analytics from Vapi:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message || "Server error" }, { status: 500 });
   }
 }
