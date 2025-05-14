@@ -1,4 +1,3 @@
-
 "use client"
 import Link from "next/link"
 import { useAuth, SignInButton, SignUpButton } from "@clerk/nextjs"
@@ -131,6 +130,14 @@ export default function Home() {
               )}
             </CardFooter>
           </Card>
+        </div>
+
+        <div className="flex justify-center mt-8">
+          <Link href="/analytics">
+            <Button variant="secondary" className="px-8 py-3 text-lg font-semibold">
+              View Analytics
+            </Button>
+          </Link>
         </div>
 
         {/* Stats Section */}
